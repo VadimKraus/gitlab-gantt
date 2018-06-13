@@ -40,7 +40,7 @@ class GitLabTools:
                         milestone.__dict__['_attrs']['start_date'] is not None
                 ):
                     project_milestones.append(milestone.__dict__['_attrs'])
-        [print(milestone) for milestone in project_milestones]
+        # [print(milestone) for milestone in project_milestones]
         return project_milestones
 
     def list_all_milestones(self):

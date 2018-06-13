@@ -1,5 +1,9 @@
 <template>
     <div class="card-body" v-bind:class="{ height: options.height }">
+        <div v-if="loading">
+            <div class="loader d-flex justify-content-center"></div>
+            <h1>{{ message }}</h1>
+        </div>
         <div id="milestones_chart"></div>
     </div>
 </template>
@@ -8,13 +12,19 @@
     export default {
         data() {
             return {
+                message: '',
+                loading: true,
                 milestones: [],
                 options: {height: 275}
             }
         },
         mounted() {
-            console.log('Component mounted.');
+            this.message = '载入中...';
             this.getMilestones();
+            window.onresize = () => {
+                this.drawChart();
+            }
+
         },
         methods: {
             drawChart() {
@@ -40,6 +50,7 @@
                 let chart = new google.visualization.Gantt(document.getElementById('milestones_chart'));
 
                 chart.draw(data, this.options);
+                this.loading = false;
             },
             getMilestones() {
                 this.$http.get(`/api/milestones`).then(response => {
