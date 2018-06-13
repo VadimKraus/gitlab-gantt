@@ -14,7 +14,7 @@ def welcome():
 @app.route('/api/milestones')
 def milestones():
     glt = GitLabTools()
-    return jsonify(glt.list_project_milestones())
+    return jsonify(glt.list_all_milestones())
 
 
 if __name__ == '__main__':

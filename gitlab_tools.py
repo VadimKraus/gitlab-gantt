@@ -16,15 +16,13 @@ class GitLabTools:
         group_milestones = []
         groups = self.gl.groups.list()
         for group in groups:
-            [
-                group_milestones.append(
-                    {
-                        'milestone': milestone.__dict__['_attrs'],
-                        'issues': [issue.__dict__['_attrs'] for issue in milestone.issues()]
-                    }
-                )
-                for milestone in group.milestones.list(state='active')
-            ]
+            for milestone in group.milestones.list(state='active'):
+                # Remove project milestone has no start date or due date
+                if (
+                        milestone.__dict__['_attrs']['due_date'] is not None and
+                        milestone.__dict__['_attrs']['start_date'] is not None
+                ):
+                    group_milestones.append(milestone.__dict__['_attrs'])
         return group_milestones
 
     def list_project_milestones(self):
@@ -44,3 +42,8 @@ class GitLabTools:
                     project_milestones.append(milestone.__dict__['_attrs'])
         [print(milestone) for milestone in project_milestones]
         return project_milestones
+
+    def list_all_milestones(self):
+        group_milestones = self.list_group_milestones()
+        project_milestones = self.list_project_milestones()
+        return group_milestones + project_milestones
