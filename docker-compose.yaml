@@ -1,0 +1,11 @@
+version: "2"
+
+services:
+  blog-flask:
+    build:
+      context: .
+    container_name: gitlab-gantt
+    image: docker.io/kuzoncby/gitlab-gantt:latest
+    restart: always
+    ports:
+      - 5000:5000

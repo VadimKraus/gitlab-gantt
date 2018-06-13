@@ -1,0 +1,16 @@
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+venv/
+.env
+
+# Vagrant
+.vagrant/
+.box
+
+# Frontend
+node_modules/
+static/
+__pycache__/

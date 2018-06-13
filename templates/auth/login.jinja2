@@ -1,0 +1,76 @@
+{% extends "layouts/app.jinja2" %}
+
+{% block title %}登陆 | Laravel{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">登陆</div>
+
+                    <div class="card-body">
+                        <form method="POST" action="{{ url_for('security.login') }}">
+                            {{ login_user_form.hidden_tag() }}
+                            <div class="form-group row">
+                                <label for="email"
+                                       class="col-sm-4 col-form-label text-md-right">电子邮件：</label>
+
+                                <div class="col-md-6">
+                                    <input id="email" type="email"
+                                           class="form-control{{ ' is-invalid' if 'email' in errors else '' }}"
+                                           name="email" required autofocus>
+
+                                    {% if 'email' in errors %}
+                                        <span class="invalid-feedback">
+                                        <strong>{{ errors['email'] }}</strong>
+                                    </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="password"
+                                       class="col-md-4 col-form-label text-md-right">密码：</label>
+
+                                <div class="col-md-6">
+                                    <input id="password" type="password"
+                                           class="form-control{{ ' is-invalid' if 'password' in errors else '' }}"
+                                           name="password" required>
+
+                                    {% if 'password' in errors %}
+                                        <span class="invalid-feedback">
+                                        <strong>{{ errors['password'] }}</strong>
+                                    </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-md-6 offset-md-4">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="remember"> 记住我
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row mb-0">
+                                <div class="col-md-8 offset-md-4">
+                                    <button type="submit" class="btn btn-primary">
+                                        登陆
+                                    </button>
+
+                                    {#                                    <a class="btn btn-link" href="{{ url_for('password.request') }}">#}
+                                    {#                                        忘记密码#}
+                                    {#                                    </a>#}
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
