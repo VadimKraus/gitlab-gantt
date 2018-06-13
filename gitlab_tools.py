@@ -47,3 +47,13 @@ class GitLabTools:
         group_milestones = self.list_group_milestones()
         project_milestones = self.list_project_milestones()
         return group_milestones + project_milestones
+
+    def list_all_issues(self):
+        group_issues = []
+        groups = self.gl.groups.list()
+        for group in groups:
+            for issue in group.issues.list(state='opened'):
+                # Remove project milestone has no due date
+                if issue.__dict__['_attrs']['due_date'] is not None:
+                    group_issues.append(issue.__dict__['_attrs'])
+        return group_issues

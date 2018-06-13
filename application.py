@@ -17,5 +17,11 @@ def milestones():
     return jsonify(glt.list_all_milestones())
 
 
+@app.route('/api/issues')
+def issues():
+    glt = GitLabTools()
+    return jsonify(glt.list_all_issues())
+
+
 if __name__ == '__main__':
     app.run()

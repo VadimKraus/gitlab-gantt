@@ -16,7 +16,8 @@ require('vue-resource');
  */
 
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
-Vue.component('gantt-diagram', require('./components/gantt.vue'));
+Vue.component('milestone-diagram', require('./components/milestone.vue'));
+Vue.component('issue-diagram', require('./components/issue.vue'));
 
 const app = new Vue({
     el: '#app'
