@@ -1,5 +1,5 @@
 <template>
-    <div class="card-body" v-bind:class="{ height: card.height }">
+    <div class="card-body" v-bind:class="{ height: options.height }">
         <div id="milestones_chart"></div>
     </div>
 </template>
@@ -9,10 +9,7 @@
         data() {
             return {
                 milestones: [],
-                // options: {height: 275}
-                card: {
-                    height: 50
-                }
+                options: {height: 275}
             }
         },
         mounted() {
@@ -21,22 +18,28 @@
         },
         methods: {
             drawChart() {
-                const container = document.getElementById('milestones_chart');
-                let chart = new google.visualization.Timeline(container);
-                let dataTable = new google.visualization.DataTable();
+                let data = new google.visualization.DataTable();
+                data.addColumn('string', '编号');
+                data.addColumn('string', '名称');
+                data.addColumn('string', '资源');
+                data.addColumn('date', '开始日期');
+                data.addColumn('date', '结束日期');
+                data.addColumn('number', '时长');
+                data.addColumn('number', '完成百分比');
+                data.addColumn('string', '依赖');
 
-                dataTable.addColumn({type: 'string', id: '里程牌名称'});
-                dataTable.addColumn({type: 'date', id: '开始'});
-                dataTable.addColumn({type: 'date', id: '结束'});
-                dataTable.addRows(this.milestones);
+                data.addRows(this.milestones);
 
-                this.card.height = dataTable.getNumberOfRows() * 41 + 30;
-
-                let options = {
-                    height: this.card.height
+                this.options = {
+                    height: data.getNumberOfRows() * 41 + 30,
+                    gantt: {
+                        trackHeight: 30
+                    }
                 };
 
-                chart.draw(dataTable, options);
+                let chart = new google.visualization.Gantt(document.getElementById('milestones_chart'));
+
+                chart.draw(data, this.options);
             },
             getMilestones() {
                 this.$http.get(`/api/milestones`).then(response => {
@@ -44,13 +47,21 @@
                     milestones.forEach(milestone => {
                         this.milestones.push(
                             [
+                                'milestone' + milestone['id'],
                                 milestone['title'],
+                                milestone['title'].toLocaleLowerCase().replace(' ', ''),
                                 new Date(milestone['start_date']),
-                                new Date(milestone['due_date'])
+                                new Date(milestone['due_date']),
+                                null,
+                                100,
+                                null
                             ]
                         )
                     });
-                    google.charts.load('current', {'packages': ['timeline'], 'language': 'zh'});
+                    // this.milestones.push(['Fletcher', new Date('1911-10-10'), new Date('2018-6-13')]);
+                    console.log(this.milestones);
+
+                    google.charts.load('current', {'packages': ['gantt'], 'language': 'zh'});
                     google.charts.setOnLoadCallback(this.drawChart);
                 }).catch(e => {
                     this.errors.push(e)

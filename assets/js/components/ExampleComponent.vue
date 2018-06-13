@@ -32,34 +32,50 @@
         },
         methods: {
             drawChart() {
-                var container = document.getElementById('milestones_chart');
-                var chart = new google.visualization.Timeline(container);
-                var dataTable = new google.visualization.DataTable();
+                let data = new google.visualization.DataTable();
+                data.addColumn('string', '编号');
+                data.addColumn('string', '名称');
+                data.addColumn('string', '资源');
+                data.addColumn('date', '开始日期');
+                data.addColumn('date', '结束日期');
+                data.addColumn('number', '时长');
+                data.addColumn('number', '完成百分比');
+                data.addColumn('string', '依赖');
 
-                dataTable.addColumn({type: 'string', id: '里程牌名称'});
-                dataTable.addColumn({type: 'date', id: '开始'});
-                dataTable.addColumn({type: 'date', id: '结束'});
-                dataTable.addRows(this.milestones);
+                data.addRows(this.milestones);
 
-                chart.draw(dataTable);
+                var options = {
+                    height: data.getNumberOfRows() * 41 + 30,
+                    gantt: {
+                        trackHeight: 30
+                    }
+                };
+
+                let chart = new google.visualization.Gantt(document.getElementById('milestones_chart'));
+
+                chart.draw(data, options);
             },
             getMilestones() {
                 this.$http.get(`/api/milestones`).then(response => {
                     let milestones = response.data;
-                    milestones.forEach(m => {
-                        let milestone = m['milestone'];
+                    milestones.forEach(milestone => {
                         this.milestones.push(
                             [
+                                'milestone' + milestone['id'],
                                 milestone['title'],
+                                milestone['title'].toLocaleLowerCase().replace(' ', ''),
                                 new Date(milestone['start_date']),
-                                new Date(milestone['due_date'])
+                                new Date(milestone['due_date']),
+                                null,
+                                100,
+                                null
                             ]
                         )
                     });
                     // this.milestones.push(['Fletcher', new Date('1911-10-10'), new Date('2018-6-13')]);
                     console.log(this.milestones);
 
-                    google.charts.load('current', {'packages': ['timeline']});
+                    google.charts.load('current', {'packages': ['gantt'], 'language': 'zh'});
                     google.charts.setOnLoadCallback(this.drawChart);
                 }).catch(e => {
                     this.errors.push(e)
