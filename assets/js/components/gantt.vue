@@ -1,8 +1,12 @@
 <template>
     <div class="card-body" v-bind:class="{ height: options.height }">
-        <div v-if="loading">
-            <div class="loader d-flex justify-content-center"></div>
-            <h1>{{ message }}</h1>
+        <div class="d-flex justify-content-center" v-if="loading">
+            <div class="sk-folding-cube">
+                <div class="sk-cube1 sk-cube"></div>
+                <div class="sk-cube2 sk-cube"></div>
+                <div class="sk-cube4 sk-cube"></div>
+                <div class="sk-cube3 sk-cube"></div>
+            </div>
         </div>
         <div id="milestones_chart"></div>
     </div>
@@ -12,14 +16,12 @@
     export default {
         data() {
             return {
-                message: '',
                 loading: true,
                 milestones: [],
                 options: {height: 275}
             }
         },
         mounted() {
-            this.message = '载入中...';
             this.getMilestones();
             window.onresize = () => {
                 this.drawChart();
