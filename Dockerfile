@@ -1,4 +1,4 @@
-FROM docker.io/python:3.6
+FROM docker.io/fedora:28
 MAINTAINER Kuzon Chen <kuzoncby@gmail.com>
 
 WORKDIR /opt
